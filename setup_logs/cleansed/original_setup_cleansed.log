@@ -1,0 +1,78 @@
+# 2 files changed. README.md and pyproject.toml
+# README.md: Original: https://github.com/ictnlp/LLaVA-Mini/blob/47da1137f7b503be685ab5faa9f64a88b102e786/README.md
+# README.md: Suggested version: https://github.com/HayatoHongo/LLaVA-Mini/blob/d6073451359f8cad17e5e2ac610c73ba7c52071e/README.md
+# pyproject.toml: Original: https://github.com/ictnlp/LLaVA-Mini/blob/4510bacb4223f12760d8cf2ffc611bdd43df920a/pyproject.toml
+# pyproject.toml: Suggested version: https://github.com/HayatoHongo/LLaVA-Mini/blob/285ab8ae2ed6532b26a6809e8c9cb4f61bf8f716/pyproject.toml
+
+
+Last login: Sat Aug 30 20:05:36 on ttys059
+hongohayato@hongousatsuhitononotobukkukonpyuta ~ % ssh ubuntu@129.213.151.56
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 6.8.0-60-generic x86_64)
+...
+ubuntu@129-213-151-56:~/LLaVA-Mini$ conda create -n llavamini python=3.10 -y
+ubuntu@129-213-151-56:~/LLaVA-Mini$ conda activate llavamini
+(llavamini) ubuntu@129-213-151-56:~/LLaVA-Mini$ pip install -e ".[train]"
+(llavamini) ubuntu@129-213-151-56:~/LLaVA-Mini$ pip install flash-attn --no-build-isolation
+Collecting flash-attn
+  Using cached flash_attn-2.8.3.tar.gz (8.4 MB)
+  Preparing metadata (setup.py) ... done
+...
+ERROR: Failed to build installable wheels for some pyproject.toml based projects (flash-attn)
+(llavamini) ubuntu@129-213-151-56:~/LLaVA-Mini$ pip install flash-attn==2.3.4 --no-build-isolation
+Collecting flash-attn==2.3.4
+  Using cached flash_attn-2.3.4-cp310-cp310-linux_x86_64.whl
+...
+Successfully installed flash-attn-2.3.4
+(llavamini) ubuntu@129-213-151-56:~/LLaVA-Mini$ # Image Understanding
+CUDA_VISIBLE_DEVICES=0 python llavamini/eval/run_llava_mini.py \
+    --model-path  ICTNLP/llava-mini-llama-3.1-8b \
+    --image-file llavamini/serve/examples/baby_cake.png \
+    --conv-mode llava_llama_3_1 --model-name "llava-mini" \
+    --query "What's the text on the cake?"
+
+...
+ModuleNotFoundError: No module named 'decord'
+(llavamini) ubuntu@129-213-151-56:~/LLaVA-Mini$ pip install decord
+Collecting decord
+...
+Successfully installed decord-0.6.0
+(llavamini) ubuntu@129-213-151-56:~/LLaVA-Mini$ # Image Understanding
+CUDA_VISIBLE_DEVICES=0 python llavamini/eval/run_llava_mini.py \
+    --model-path  ICTNLP/llava-mini-llama-3.1-8b \
+    --image-file llavamini/serve/examples/baby_cake.png \
+    --conv-mode llava_llama_3_1 --model-name "llava-mini" \
+    --query "What's the text on the cake?"
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.2.6 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+...
+RuntimeError: Numpy is not available
+(llavamini) ubuntu@129-213-151-56:~/LLaVA-Mini$ python -m pip uninstall -y numpy
+python -m pip install --no-cache-dir "numpy==1.26.4"
+...
+Successfully installed numpy-1.26.4
+(llavamini) ubuntu@129-213-151-56:~/LLaVA-Mini$ # Image Understanding
+CUDA_VISIBLE_DEVICES=0 python llavamini/eval/run_llava_mini.py \
+    --model-path  ICTNLP/llava-mini-llama-3.1-8b \
+    --image-file llavamini/serve/examples/baby_cake.png \
+    --conv-mode llava_llama_3_1 --model-name "llava-mini" \
+    --query "What's the text on the cake?"
+#Vision Tokens: 1
+...
+Congratulations Kate & Luke on your upcoming arrival
+(llavamini) ubuntu@129-213-151-56:~/LLaVA-Mini$ # Video Understanding
+CUDA_VISIBLE_DEVICES=0 python llavamini/eval/run_llava_mini.py \
+    --model-path  ICTNLP/llava-mini-llama-3.1-8b \
+    --video-file llavamini/serve/examples/fifa.mp4 \
+    --conv-mode llava_llama_3_1 --model-name "llava-mini" \
+    --query "What happened in this video?"
+#Vision Tokens: 1
+...
+The video captures a moment of triumph for the Argentine national football team, celebrating their victory at the FIFA World Cup in Qatar 2022. The team is seen on a stage, holding up their trophy, which is the iconic FIFA World Cup trophy, signifying their achievement in the tournament. The celebration is marked by the players' joyful expressions and the bright lights of the stadium in the background, which suggest a large-scale event with a significant audience. The presence of the trophy and the team's attire, along with the stadium lights, indicates that this is a post-match celebration following a successful game, likely the final, given the context of the World Cup. The team's attire, featuring the colors of the Argentine flag, signifies national pride and unity. The event is a significant moment in sports, representing the culmination of a team's hard work and dedication to reach the pinnacle of international football.
+(llavamini) ubuntu@129-213-151-56:~/LLaVA-Mini$
